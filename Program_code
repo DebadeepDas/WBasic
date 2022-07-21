@@ -1,0 +1,81 @@
+#WBasic
+#A Basic Word Processor using Python
+#CS Project for the Session: 2022-2023
+#Created by Debadeep Das, Class: XII, Section: A, Roll No: 
+#School: Kendriya Vidyalaya Khanapara
+
+#Introductory code blocks welcoming the user
+print()
+print('''"Welcome to WBasic"
+A Basic Word Processor made using Python''')
+print()
+
+#Defining a function to accept the user desired option/feature of the program
+def User_Input():
+    ChosenOption = int(input("Which task would you like to perform?: "))
+    return ChosenOption
+
+#Giving the user the choice of what they want to do
+def info():
+    print('''Choose from the following features and type in the number specific to the task you want to perform''')
+    print()
+    print('''
+    1 -->  Create a blank file and input data
+    2 -->  Open an existing file to read and write data
+    3 -->  Rename a file
+    4 -->  Find and Replace
+    5 -->  Copy data
+    6 -->  Paste data
+    7 -->  Delete a word 
+    8 -->  Delete a character
+    9 -->  Delete a line
+    10 --> Delete a file
+    11 --> About and Credits
+    12 --> Exit Program ''')
+    print()
+
+#Putting the entire program in a while loop
+#in order to use the features multiple times
+while True:
+    info()
+
+#Defining the functions to perform
+
+#Create a blank file and input data
+    if User_Input() == 1:
+        print("Task Chosen: Create a blank file and input data")
+        print()
+        File_Loc = input("Where do you want to save your File?: ")
+        FileName = input("Enter the desired name for your file: ")
+        Data = input("Input the desired data which you want to write in your file: ")
+        File = open(File_Loc+FileName+'.txt','w')
+        File.write(Data)
+        File.close()
+        print()
+        print("Your task has been succesfully completed")
+        
+      
+#Open an existing file to read data
+    elif User_Input() == 2:
+        print("Task Chosen: Open an existing file to read data")
+        print()
+        File_Loc = input("Where is your File?: ")
+        FileName = input("Enter the name of the file which you want to open: ")
+        Num_Lines = int(input("How many lines of the "))
+        File = open(File_Loc+FileName+'.txt','r')
+        File.read()
+        File.close()
+        print()
+        print("Your task has been succesfully completed")
+
+#Rename a file
+    elif User_Input() == 3:
+        print("Task Chosen: Rename a file")
+        print()
+
+        
+
+#Exiting program
+    elif User_Input() == 12:
+        print("Thank you for using this program")
+        exit()
