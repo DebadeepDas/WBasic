@@ -1,20 +1,26 @@
 #WBasic
-#A Basic Word Processor using Python
+#A Basic Word Processor made using Python
 #CS Project for the Session: 2022-2023
 #Created by Debadeep Das, Class: XII, Section: A, Roll No: 
 #School: Kendriya Vidyalaya Khanapara
+
+#Importing required modules for the program
+import pyperclip as pyclip 
+#This module helps in copying and pasting data easily
+import os
+#This module helps in creating and removing files easily
+import time
+#This module helps us to deal with execution time of the program, time related functions, etc.
 
 #Introductory code blocks welcoming the user
 print()
 print('''"Welcome to WBasic"
 A Basic Word Processor made using Python''')
 print()
-
 #Defining a function to accept the user desired option/feature of the program
 def User_Input():
     ChosenOption = int(input("Which task would you like to perform?: "))
     return ChosenOption
-
 #Giving the user the choice of what they want to do
 def info():
     print('''Choose from the following features and type in the number specific to the task you want to perform''')
@@ -23,12 +29,12 @@ def info():
     1 -->  Create a blank file and input data
     2 -->  Open an existing file to read and write data
     3 -->  Rename a file
-    4 -->  Find and Replace
-    5 -->  Copy data
-    6 -->  Paste data
-    7 -->  Delete a word 
-    8 -->  Delete a character
-    9 -->  Delete a line
+    4 -->  Find and Replace words
+    5 -->  Copy data from a file
+    6 -->  Paste data into a file
+    7 -->  Delete a character from a file
+    8 -->  Delete a word from a file
+    9 -->  Delete a line from a file
     10 --> Delete a file
     11 --> About and Credits
     12 --> Exit Program ''')
@@ -39,10 +45,13 @@ def info():
 while True:
     info()
 
+#Defining  variable to store the user's choice
+    C = User_Input()
+
 #Defining the functions to perform
 
 #Create a blank file and input data
-    if User_Input() == 1:
+    if C == 1:
         print("Task Chosen: Create a blank file and input data")
         print()
         File_Loc = input("Where do you want to save your File?: ")
@@ -53,29 +62,236 @@ while True:
         File.close()
         print()
         print("Your task has been succesfully completed")
-        
-      
+        print()
 #Open an existing file to read data
-    elif User_Input() == 2:
+    elif C == 2:
         print("Task Chosen: Open an existing file to read data")
         print()
-        File_Loc = input("Where is your File?: ")
+        File_Loc = input("Where is your File? (Give entire file path): ")
         FileName = input("Enter the name of the file which you want to open: ")
-        Num_Lines = int(input("How many lines of the "))
-        File = open(File_Loc+FileName+'.txt','r')
-        File.read()
+        File = open(File_Loc+FileName+'.txt','r+')
+        print("Your file has been opened")
+        print()
+        Num_Chars = int(input("How many characters of the file do you want to read? "))
+        R_Data = File.read(Num_Chars)
+        W_Data = input("Input the data you want to add to this file (type n for no input): ")
+        if W_Data in ['n','N']:
+            break
+        else:
+            File.write(W_Data)
+        print()
+        u_choice = input("Do you want to display the read data? (type n for no output): ")
+        if u_choice in ['n','N']:
+            break
+        else:
+            print(R_Data)
         File.close()
         print()
         print("Your task has been succesfully completed")
-
+        print()
 #Rename a file
-    elif User_Input() == 3:
+    elif C == 3:
         print("Task Chosen: Rename a file")
         print()
-
+        File_Loc = input("Where is your File? (Give entire file path): ")
+        FileName = input("Enter the name of the file which you want to open: ")
+        NewName = input("Enter the new name for the file: ")
+        source = File_Loc+FileName+'.txt'
+        destination = File_Loc+NewName+'.txt'
+        os.rename(source, destination)
+        print()
+        print("Your file, %s has been renamed successfully" %source)
+        print()
+#Find and Replace words
+    elif C == 4:
+        print("Task Chosen: Find and Replace")
+        print()
+        File_Loc = input("Where is your File? (Give entire file path): ")
+        FileName = input("Enter the name of the file which you want to open: ")
+        File = open(File_Loc+FileName+'.txt')
+        Find = input("Which word do you want to find? ")
+        Replace = input("What do you want to replace the word with: ")
+        W_List = [] #creating an empty list to append into file after replacing the word
+        count = 0 #creating a counter variable to store the number of times the word given by user appeared in file
+        for Lines in File:
+            if Find in Lines:
+                Lines = Lines.replace(Find, Replace)
+                count += 1
+            W_List.append(Lines)
+        File.close()
+        File = open(File_Loc+FileName+'.txt', 'w')
+        for L in W_List:
+            File.write(L)
+        File.close()
+        print()
+        print("Number of times",Find,"appeared in",File_Loc+FileName+'.txt',"is:", count)
+        if count == 0:
+            print("No changes occurred")
+        else:
+            print("Your word",Find,"has been replaced by",Replace,"successfully")
+        print()
+#Copy data from a file
+    elif C == 5:
+        print("Task Chosen: Copy data from a file")
+        print()
+        File_Loc = input("Where is your File? (Give entire file path): ")
+        FileName = input("Enter the name of the file which you want to open: ")
+        File = open(File_Loc+FileName+'.txt')
+        Chars = int(input("How many characters do you want to copy?: "))
+        Data = File.read(Chars)
+        pyclip.copy(Data)
+        File.close()
+        print()
+        print("Your data has been successfully copied to the clipboard")
+        print()
+#Paste data into a file
+    elif C == 6:
+        print("Task Chosen: Paste data into a file")
+        print()
+        File_Loc = input("Where is your File? (Give entire file path): ")
+        FileName = input("Enter the name of the file which you want to open: ")
+        File = open(File_Loc+FileName+'.txt', 'a')
+        Data = pyclip.paste()
+        File.write(Data)
+        File.close()
+        print()
+        print(Data, "--> was successfully pasted into -->",File_Loc+FileName+'.txt')
+        print()
+#Delete a character from a file
+    elif C == 7:
+        print("Task Chosen: Delete a character from a file")
+        print()
+        File_Loc = input("Where is your File? (Give entire file path): ")
+        FileName = input("Enter the name of the file which you want to open: ")
+        File = open(File_Loc+FileName+'.txt')
+        Char = input("Input the character which you want to delete: ")
+        Data = File.read()
+        Data_List = [] #creating an empty list to append all data after performing the required function
+        count = 0 #creating a counter variable to store total occurrences of the character given by the user in the file
+        List = Data.split()
+        for character in Data:
+            if character == Char:
+                character = ''
+                count += 1
+            Data_List.append(character)
+        File.close()
+        File = open(File_Loc+FileName+'.txt', 'w')
+        for char in Data_List:
+            File.write(char)
+        File.close()
+        print()
+        print("Number of times",Char,"appeared in",File_Loc+FileName+'.txt',"is:", count)
+        if count == 0:
+            print("No changes occurred")
+        else:
+            print("All occurrences of",Char,"have been removed from",File_Loc+FileName+'.txt',"successfully")
+        print()
+#Delete a word from a file
+    elif C == 8:
+        print("Task Chosen: Delete a word from a file")
+        print()
+        File_Loc = input("Where is your File? (Give entire file path): ")
+        FileName = input("Enter the name of the file which you want to open: ")
+        File = open(File_Loc+FileName+'.txt')
+        Word = input("Input the word which you want to delete: ")
+        W_List = [] #creating an empty list to append all data after performing the required function
+        count = 0 #creating a counter variable to store total occurrences of the word given by the user in the file
+        for L in File:
+            if Word in L:
+                L = L.replace(Word, '')
+                count += 1
+            W_List.append(L)
+        File.close()
+        File = open(File_Loc+FileName+'.txt', 'w')
+        for L in W_List:
+            File.write(L)
+        File.close()
+        print()
+        print("Number of times",Word,"appeared in",File_Loc+FileName+'.txt',"is:", count)
+        if count == 0:
+            print("No changes occurred")
+        else:
+            print("All occurrences of",Word,"have been removed from",File_Loc+FileName+'.txt',"successfully")
+        print()
+#Delete a line from a file
+    elif C == 9:
+        print("Task Chosen: Delete a line from a file")
+        print()
+        File_Loc = input("Where is your File? (Give entire file path): ")
+        FileName = input("Enter the name of the file which you want to open: ")
+        File = open(File_Loc+FileName+'.txt')
+        Line = input("Input the line which you want to delete: ")
+        Data_List = [] #creating an empty list to append all data after performing the required function
+        count = 0 #creating a counter variable to store total occurrences of the line given by the user in the file  
+        Data = File.read()
+        for Lines in Data:
+            if Lines == Line:
+                Lines = ''
+                count += 1
+            Data_List.append(Lines)
+        File.close()
+        File = open(File_Loc+FileName+'.txt', 'w')
+        for L in Data_List:
+            File.write(L)
+        File.close()
+        print()
+        print("Number of times",Line,"appeared in",File_Loc+FileName+'.txt',"is:", count)
+        if count == 0:
+            print("No changes occurred")
+        else:
+            print("All occurrences of:",Line,"--> have been removed from -->",File_Loc+FileName+'.txt',"successfully")
+        print()
+#Delete a file
+    elif C == 10:
+        print("Task Chosen: Delete a file")
+        print()
+        File_Loc = input("Where is your File? (Give entire file path): ")
+        FileName = input("Enter the name of the file which you want to open: ")
+        File = File_Loc+FileName+'.txt'
+        Flag = 0 #creating a flag to print prompt when exception: user is trying to delete a non-existent file in that location
+        try:
+            os.remove(File)
+        except:
+            print()
+            print("File does not exit")
+            Flag = 1
+        print()
+        if Flag == 0:
+            print("Your",File,"has been successfully deleted")
+        else:
+            print("No changes took place")
+        print()
+#About and Credits
+    elif C == 11:
+        print()
+        print("About and Credits")
+        print()
+        print('''This program was created by Debadeep Das of Class 12, Section A of Kendriya Vidyalaya Khanapara.
         
+This project, nicknamed, 'WBasic' is a simple non-GUI based word processor with limited features
+built using the Python programming language. It is capable of creating files, 
+opening and editing existing files, removing certain lines, words, characters and is also capable 
+of some very basic formatting. It is a very simple program but it is completely expandable and can 
+be easily modified into a much better GUI program with many features.
 
+The idea behind this project was simply to apply concepts like 'Python File Handling', 'Loops in Python' 
+and 'Basics of Python'and successfully putting them together to produce some viable results. It also uses 
+additonal modules like:
+
+* 'pyperclip': which is used to easily copy and paste data on and off the clipboard,
+* 'os': which is used for easily creating and removing a file, fetching its contents, changing directory,etc.,
+* 'time': which is used for delaying the execution of the program and to perform other time related functions.
+
+Credits go to my Computer Science teacher, Mr. Gurnishan Singh Sir who always guided me while making this project.
+Credits also go to the Internet websites and YouTube videos which helped me throughout this process.
+
+Thank you
+        ''')
+        print()
 #Exiting program
-    elif User_Input() == 12:
-        print("Thank you for using this program")
+    elif C == 12:
+        print()
+        print("You have successfully exited this program")
+        print("Thank you for using it!")
+        time.sleep(5)
         exit()
